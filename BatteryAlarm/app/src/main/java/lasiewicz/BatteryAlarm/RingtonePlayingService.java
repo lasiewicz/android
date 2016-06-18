@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TimePicker;
 
 import java.util.Random;
 
@@ -68,82 +69,42 @@ public class RingtonePlayingService extends Service {
         }
 
         // get battery's thing
+      boolean Plugged_in=false;
+
         String sounds_id = intent.getExtras().getString("quote id");
         Log.e("Service: sound id is " , sounds_id);
 
-        if(!this.isRunning && startId == 1) {
+        if(!this.isRunning && startId == 1 && Plugged_in==false) {
             Log.e("if there was not sound ", " and you want start");
 
             assert sounds_id != null;
             if (sounds_id.equals("0")) {
-
-                int min = 1;
-                int max = 9;
-
-                Random r = new Random();
-                int random_number = r.nextInt(max - min + 1) + min;
-                Log.e("random number is ", String.valueOf(random_number));
-
-                if (random_number == 1) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
-                }
-                else if (random_number == 2) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.sound9);
-                }
-                else if (random_number == 3) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.sound8);
-                }
-                else if (random_number == 4) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.sound7);
-                }
-                else if (random_number == 5) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.sound6);
-                }
-                else if (random_number == 6) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.sound5);
-                }
-                else if (random_number == 7) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.rainthunder);
-                }
-                else if (random_number == 8) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
-                }
-                else if (random_number == 9) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.eathquake);
-                }
-                else {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
-                }
+                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
             }
             else if (sounds_id.equals("1")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
-            }
-            else if (sounds_id.equals("2")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.sound9);
-            }
-            else if (sounds_id.equals("3")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.sound8);
-            }
-            else if (sounds_id.equals("4")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.sound7);
-            }
-            else if (sounds_id.equals("5")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.sound6);
-            }
-            else if (sounds_id.equals("6")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.sound5);
-            }
-            else if (sounds_id.equals("7")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.rainthunder);
             }
-            else if (sounds_id.equals("8")) {
+            else if (sounds_id.equals("2")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
-            else if (sounds_id.equals("9")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.eathquake);
+
+            else if (sounds_id.equals("3")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.alertbomb);
+            }
+            else if (sounds_id.equals("4")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.whale);
+            }
+            else if (sounds_id.equals("5")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.computerlove);
+            }
+            else if (sounds_id.equals("6")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+            }
+            else if (sounds_id.equals("7")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
             else {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
             }
 
 
@@ -195,6 +156,7 @@ public class RingtonePlayingService extends Service {
 
         this.isRunning = false;
     }
+
 
 
 }

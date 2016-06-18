@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     AlarmManager alarmManager;
     private PendingIntent pending_intent;
@@ -30,12 +31,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TimePicker alarmTimePicker;
     private static MainActivity inst;
     private TextView alarmTextView;
-
+    public TextView batterysett;
     private BatteryAlarmReceiver alarm;
     private Context context;
     Spinner spinner;
-    int sound_picked = 0;
 
+    int sound_picked = 0;
+    boolean isPluggedin;
+    public boolean pluggedin;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        batterysett= (TextView) (findViewById(R.id.batterysett));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -164,7 +168,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inst = this;
     }
 
+    public void setbatterytex()
+    {
+        isPluggedin=true;
+        batterysett.setText("The device is plugged in");
 
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
