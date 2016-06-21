@@ -8,9 +8,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TimePicker;
 
@@ -68,43 +72,66 @@ public class RingtonePlayingService extends Service {
                 break;
         }
 
-        // get battery's thing
-      boolean Plugged_in=false;
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = context.registerReceiver(null, ifilter);
+        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+
 
         String sounds_id = intent.getExtras().getString("quote id");
         Log.e("Service: sound id is " , sounds_id);
 
-        if(!this.isRunning && startId == 1 && Plugged_in==false) {
+        if(!this.isRunning && startId == 1 && isCharging==false) {
             Log.e("if there was not sound ", " and you want start");
 
             assert sounds_id != null;
             if (sounds_id.equals("0")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.buzzer);
             }
             else if (sounds_id.equals("1")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.rainthunder);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.rainthunder);
             }
             else if (sounds_id.equals("2")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
 
             else if (sounds_id.equals("3")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.alertbomb);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.alertbomb);
             }
             else if (sounds_id.equals("4")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.whale);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.whale);
             }
             else if (sounds_id.equals("5")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.computerlove);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.computerlove);
             }
             else if (sounds_id.equals("6")) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
             }
             else if (sounds_id.equals("7")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
             else {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
+
             }
 
 
