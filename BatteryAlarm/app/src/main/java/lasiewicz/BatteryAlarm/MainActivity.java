@@ -111,13 +111,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 try {
 
 
-                    calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-                    calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+                    final int hour;
+                    final int minute;
+                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1){
+                        hour = alarmTimePicker.getHour();
+                        minute = alarmTimePicker.getMinute();
+                        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+                        calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+                    } else {
+                        hour = alarmTimePicker.getCurrentHour();
+                        minute = alarmTimePicker.getCurrentMinute();
+                        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+                        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
 
-                    final int hour = alarmTimePicker.getHour();
-                    final int minute = alarmTimePicker.getMinute();
-                    ;
-
+                    }
                     String minute_string = String.valueOf(minute);
                     String hour_string = String.valueOf(hour);
 
