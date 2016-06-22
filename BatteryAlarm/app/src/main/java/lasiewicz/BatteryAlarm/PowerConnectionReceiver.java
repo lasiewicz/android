@@ -1,12 +1,17 @@
 package lasiewicz.BatteryAlarm;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.BatteryManager;
-
 /**
  * Created by lasiewiw on 6/22/2016.
+ */
+
+
+        import android.content.BroadcastReceiver;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.os.BatteryManager;
+
+/**
+ * Created by lasiewiw on 6/21/2016.
  */
 public class PowerConnectionReceiver extends BroadcastReceiver {
     @Override

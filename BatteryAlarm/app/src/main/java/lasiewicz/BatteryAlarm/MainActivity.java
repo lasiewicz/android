@@ -19,9 +19,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.content.SharedPreferences;
+import android.os.CountDownTimer;
+import android.widget.Toast;
 
 import java.util.Calendar;
-
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -31,14 +33,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TimePicker alarmTimePicker;
     private static MainActivity inst;
     private TextView alarmTextView;
-    public TextView batterysett;
+
     private BatteryAlarmReceiver alarm;
     private Context context;
     Spinner spinner;
-
     int sound_picked = 0;
-    boolean isPluggedin;
-    public boolean pluggedin;
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -46,12 +46,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        batterysett= (TextView) (findViewById(R.id.batterysett));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         this.context = this;
+        final String PREFS_NAME = "MyPrefsFile";
 
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        if (settings.getBoolean("my_first_time", true)) {
+            //the app is being launched for first time, do something
+            Log.d("Comments", "First time");
+
+            // first time task
+            final Toast toast = Toast.makeText(getBaseContext(), "The purpose of this app is that you don't forget to plug in your phone before you go to bed.  Set the alarm to your approxamate bed time and pick a sound.  If your phone is plugged in at that time,  this app will do nothing.  However if you phone is not plugged in,  it will remind you.", Toast.LENGTH_SHORT);
+            toast.show();
+            new CountDownTimer(10000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    toast.show();
+                }
+
+                public void onFinish() {
+                    toast.cancel();
+                }
+            }.start();
+            // record the fact that the app has been started at least once
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }
         //alarm = new BatteryAlarmReceiver();
         alarmTextView = (TextView) findViewById(R.id.alarmText);
 
@@ -81,36 +102,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         Button start_alarm= (Button) findViewById(R.id.start_alarm);
+
         start_alarm.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.M)
 
             @Override
             public void onClick(View v) {
+                try {
 
-                calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-                calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
 
-                final int hour = alarmTimePicker.getHour();
-                final int minute = alarmTimePicker.getMinute();;
+                    calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+                    calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
 
-                String minute_string = String.valueOf(minute);
-                String hour_string = String.valueOf(hour);
+                    final int hour = alarmTimePicker.getHour();
+                    final int minute = alarmTimePicker.getMinute();
+                    ;
 
-                if (minute < 10) {
-                    minute_string = "0" + String.valueOf(minute);
+                    String minute_string = String.valueOf(minute);
+                    String hour_string = String.valueOf(hour);
+
+
+                    if (minute < 10) {
+                        minute_string = "0" + String.valueOf(minute);
+                    }
+
+                    if (hour > 12) {
+                        hour_string = String.valueOf(hour - 12);
+                    }
+
+                    myIntent.putExtra("extra", "yes");
+                    myIntent.putExtra("quote id", String.valueOf(sound_picked));
+                    pending_intent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
+
+                    setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
                 }
+                catch (Exception expt){
+                    String fr= expt.toString();
+                    for (int i=0; i < 2; i++)
+                    {
+                        int duration = Toast.LENGTH_LONG;
 
-                if (hour > 12) {
-                    hour_string = String.valueOf(hour - 12) ;
-                }
+                        Toast toast = Toast.makeText(context, fr, duration);
+                        toast.show();
+                    }
 
-                myIntent.putExtra("extra", "yes");
-                myIntent.putExtra("quote id", String.valueOf(sound_picked));
-                pending_intent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
 
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
 
-                setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
             }
 
         });
@@ -168,12 +208,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         inst = this;
     }
 
-    public void setbatterytex()
-    {
-        isPluggedin=true;
-        batterysett.setText("The device is plugged in");
 
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();

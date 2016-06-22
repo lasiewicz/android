@@ -9,14 +9,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.TimePicker;
 
 import java.util.Random;
 
@@ -56,7 +54,7 @@ public class RingtonePlayingService extends Service {
                 .build();
 
         String state = intent.getExtras().getString("extra");
-
+        Boolean isCharging=false;
         Log.e("what is going on here  ", state);
 
         assert state != null;
@@ -72,16 +70,27 @@ public class RingtonePlayingService extends Service {
                 break;
         }
 
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = context.registerReceiver(null, ifilter);
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
-
+        // get battery's thing
         String sounds_id = intent.getExtras().getString("quote id");
         Log.e("Service: sound id is " , sounds_id);
+        isCharging=false;
+        try {
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = context.registerReceiver(null, ifilter);
+            if (batteryStatus != null)
+            {
+                int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL;
+            }
 
-        if(!this.isRunning && startId == 1 && isCharging==false) {
+        }
+        catch (Exception expt)
+        {
+            String texterror= expt.toString() + " crashed checking plugged in";
+            Log.e("crashed  ", texterror);
+        }
+        if(!this.isRunning && startId == 1 && !isCharging) {
             Log.e("if there was not sound ", " and you want start");
 
             assert sounds_id != null;
@@ -101,7 +110,7 @@ public class RingtonePlayingService extends Service {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
 
-            else if (sounds_id.equals("3")) {
+            else if (sounds_id.equals("6")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.alertbomb);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.alertbomb);
             }
@@ -113,14 +122,14 @@ public class RingtonePlayingService extends Service {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.computerlove);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.computerlove);
             }
-            else if (sounds_id.equals("6")) {
+            else if (sounds_id.equals("3")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.plugyourphonein);
             }
-            else if (sounds_id.equals("7")) {
+            else if (sounds_id.equals("6")) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
                 mMediaPlayer = MediaPlayer.create(this, R.raw.frogs);
             }
@@ -182,7 +191,6 @@ public class RingtonePlayingService extends Service {
 
         this.isRunning = false;
     }
-
 
 
 }
