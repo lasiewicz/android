@@ -78,7 +78,6 @@ public class RingtonePlayingService extends Service {
         boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL;
 
-
         String sounds_id = intent.getExtras().getString("quote id");
         Log.e("Service: sound id is " , sounds_id);
 

@@ -5,10 +5,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -55,25 +52,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         this.context = this;
 
-        final String PREFS_NAME = "MyPrefsFile";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-            //the app is being launched for first time, do something
-            Log.d("Comments", "First time");
-
-            // first time task
-            final Toast toast = Toast.makeText(getBaseContext(), "The purpose of this app is that you don't forget to plug in your phone before you go to bed.  Set the alarm to your approxamate bed time and pick a sound.  If your phone is plugged in at that time,  this app will do nothing.  However if you phone is not plugged in,  it will remind you.",Toast.LENGTH_SHORT);
-            toast.show();
-            new CountDownTimer(10000, 1000)
-            {
-                public void onTick(long millisUntilFinished) {toast.show();}
-                public void onFinish() {toast.cancel();}
-            }.start();
-            // record the fact that the app has been started at least once
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }
         //alarm = new BatteryAlarmReceiver();
         alarmTextView = (TextView) findViewById(R.id.alarmText);
 
